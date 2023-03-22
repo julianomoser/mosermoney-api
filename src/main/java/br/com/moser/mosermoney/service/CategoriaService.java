@@ -5,6 +5,7 @@ import br.com.moser.mosermoney.repository.CategoriaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Juliano Moser
@@ -20,5 +21,13 @@ public class CategoriaService {
 
     public List<Categoria> listAll() {
         return repository.findAll();
+    }
+
+    public Categoria save(Categoria categoria) {
+        return repository.save(categoria);
+    }
+
+    public Optional<Categoria> findById(Long codigo) {
+        return repository.findById(codigo);
     }
 }

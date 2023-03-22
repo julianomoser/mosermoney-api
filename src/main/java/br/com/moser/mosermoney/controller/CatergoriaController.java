@@ -2,11 +2,13 @@ package br.com.moser.mosermoney.controller;
 
 import br.com.moser.mosermoney.model.Categoria;
 import br.com.moser.mosermoney.service.CategoriaService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletResponse;
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -26,5 +28,21 @@ public class CatergoriaController {
     public ResponseEntity<List<Categoria>> listAll() {
         final List<Categoria> categoriaList = service.listAll();
         return ResponseEntity.ok(categoriaList);
+    }
+
+    @PostMapping
+    public ResponseEntity<Categoria> save(@RequestBody Categoria categoria, HttpServletResponse response) {
+        final Categoria categoriaSalva = service.save(categoria);
+
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
+                .path("/{id}")
+                .buildAndExpand(categoriaSalva.getCodigo()).toUri();
+        response.setHeader(HttpHeaders.LOCATION, uri.toString());
+        return ResponseEntity.created(uri).body(categoriaSalva);
+    }
+
+    @GetMapping("/{codigo}")
+    public Categoria buscarPeloCodigo(@PathVariable Long codigo) {
+        return this.service.findById(codigo).orElse(null);
     }
 }
