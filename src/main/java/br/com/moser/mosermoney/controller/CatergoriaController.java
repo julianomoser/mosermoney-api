@@ -42,7 +42,9 @@ public class CatergoriaController {
     }
 
     @GetMapping("/{codigo}")
-    public Categoria buscarPeloCodigo(@PathVariable Long codigo) {
-        return this.service.findById(codigo).orElse(null);
+    public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
+        return this.service.findById(codigo)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }
