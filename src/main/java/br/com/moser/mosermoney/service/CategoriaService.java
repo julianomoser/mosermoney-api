@@ -1,6 +1,9 @@
 package br.com.moser.mosermoney.service;
 
+import br.com.moser.mosermoney.exception.CategoriaNaoEncontradoException;
+import br.com.moser.mosermoney.exception.PessoaNaoEncontradoException;
 import br.com.moser.mosermoney.model.Categoria;
+import br.com.moser.mosermoney.model.Pessoa;
 import br.com.moser.mosermoney.repository.CategoriaRepository;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +32,10 @@ public class CategoriaService {
 
     public Optional<Categoria> findById(Long codigo) {
         return repository.findById(codigo);
+    }
+
+    public Categoria findOrFail(Long codigo) {
+        return repository.findById(codigo)
+                .orElseThrow(() -> new CategoriaNaoEncontradoException(codigo));
     }
 }
