@@ -1,15 +1,15 @@
 package br.com.moser.mosermoney.controller;
 
+import br.com.moser.mosermoney.event.RecursoCriadoEvent;
 import br.com.moser.mosermoney.model.Categoria;
 import br.com.moser.mosermoney.service.CategoriaService;
-import org.springframework.http.HttpHeaders;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 
 /**
@@ -20,9 +20,11 @@ import java.util.List;
 public class CatergoriaController {
 
     private final CategoriaService service;
+    private final ApplicationEventPublisher publisher;
 
-    public CatergoriaController(CategoriaService service) {
+    public CatergoriaController(CategoriaService service, ApplicationEventPublisher publisher) {
         this.service = service;
+        this.publisher = publisher;
     }
 
     @GetMapping
@@ -34,12 +36,8 @@ public class CatergoriaController {
     @PostMapping
     public ResponseEntity<Categoria> save(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
         final Categoria categoriaSalva = service.save(categoria);
-
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
-                .path("/{id}")
-                .buildAndExpand(categoriaSalva.getCodigo()).toUri();
-        response.setHeader(HttpHeaders.LOCATION, uri.toString());
-        return ResponseEntity.created(uri).body(categoriaSalva);
+        publisher.publishEvent(new RecursoCriadoEvent(this, response, categoriaSalva.getCodigo()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
     }
 
     @GetMapping("/{codigo}")
