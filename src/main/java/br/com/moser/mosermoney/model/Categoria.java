@@ -3,6 +3,8 @@ package br.com.moser.mosermoney.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 /**
@@ -19,6 +21,9 @@ public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long codigo;
+    @NotEmpty
+    @Size(min = 1, max = 50)
+    @Column(nullable = false)
     private String nome;
 
     @Override
