@@ -1,5 +1,6 @@
 package br.com.moser.mosermoney.exceptionhandler;
 
+import br.com.moser.mosermoney.exception.EntidadeNaoEncontradaException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
@@ -17,6 +18,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static br.com.moser.mosermoney.exceptionhandler.ProblemType.MENSAGEM_INCOMPREENSIVEL;
+import static br.com.moser.mosermoney.exceptionhandler.ProblemType.RECURSO_NAO_ENCONTRADO;
 
 /**
  * @author Juliano Moser
@@ -123,6 +126,19 @@ public class MosermoneyExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status, WebRequest request) {
         return handleValidationInternal(ex, headers, status, request, ex.getBindingResult());
+    }
+
+    @ExceptionHandler(EntidadeNaoEncontradaException.class)
+    public ResponseEntity<?> handleEntidadeNaoEncontrada(EntidadeNaoEncontradaException ex,
+                                                         WebRequest request) {
+        HttpStatus status = HttpStatus.NOT_FOUND;
+        String detail = ex.getMessage();
+
+        Problem problem = createProblemBuilder(status, RECURSO_NAO_ENCONTRADO, detail)
+                .userMessage(detail)
+                .build();
+
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
     }
 
     private ResponseEntity<Object> handleValidationInternal(Exception ex, HttpHeaders headers, HttpStatus status, WebRequest request,
