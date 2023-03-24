@@ -39,6 +39,13 @@ public class Pessoa {
     @NotNull
     private Boolean ativo;
 
+    public void ativar() {
+        setAtivo(true);
+    }
+    public void inativar() {
+        setAtivo(false);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -49,6 +49,20 @@ public class PessoaController {
         return ResponseEntity.ok().body(pessoa);
     }
 
+    @PutMapping("/{codigo}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> ativar(@PathVariable Long codigo) {
+        service.ativar(codigo);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{codigo}/ativo")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<Void> inativar(@PathVariable Long codigo) {
+        service.inativar(codigo);
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{codigo}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long codigo) {

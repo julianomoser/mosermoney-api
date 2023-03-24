@@ -42,6 +42,18 @@ public class PessoaService {
         return repository.save(pessoaAtual);
     }
 
+    @Transactional
+    public void ativar(Long codigo) {
+        Pessoa pessoa = this.findOrFail(codigo);
+        pessoa.ativar();
+    }
+
+    @Transactional
+    public void inativar(Long codigo) {
+        Pessoa pessoa = this.findOrFail(codigo);
+        pessoa.inativar();
+    }
+
 
     public Optional<Pessoa> findById(Long codigo) {
         return repository.findById(codigo);
