@@ -3,8 +3,10 @@ package br.com.moser.mosermoney.controller;
 import br.com.moser.mosermoney.event.RecursoCriadoEvent;
 import br.com.moser.mosermoney.model.Pessoa;
 import br.com.moser.mosermoney.service.PessoaService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +40,13 @@ public class PessoaController {
         return this.service.findById(codigo)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PutMapping(path = "/{codigo}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo,
+                                            @RequestBody @Valid Pessoa pessoa) {
+        pessoa = service.atualizar(pessoa, codigo);
+        return ResponseEntity.ok().body(pessoa);
     }
 
     @DeleteMapping("/{codigo}")

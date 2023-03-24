@@ -4,6 +4,7 @@ import br.com.moser.mosermoney.exception.EntidadeEmUsoException;
 import br.com.moser.mosermoney.exception.PessoaNaoEncontradoException;
 import br.com.moser.mosermoney.model.Pessoa;
 import br.com.moser.mosermoney.repository.PessoaRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,14 @@ public class PessoaService {
         return repository.save(pessoa);
     }
 
+    @Transactional
+    public Pessoa atualizar(Pessoa pessoa, Long codigo) {
+        Pessoa pessoaAtual = this.findOrFail(codigo);
+        BeanUtils.copyProperties(pessoa, pessoaAtual, "codigo");
+        return repository.save(pessoaAtual);
+    }
+
+
     public Optional<Pessoa> findById(Long codigo) {
         return repository.findById(codigo);
     }
@@ -51,5 +60,10 @@ public class PessoaService {
                     String.format(MSG_PESSOA_EM_USO, codigo)
             );
         }
+    }
+
+    public Pessoa findOrFail(Long codigo) {
+        return repository.findById(codigo)
+                .orElseThrow(() -> new PessoaNaoEncontradoException(codigo));
     }
 }
