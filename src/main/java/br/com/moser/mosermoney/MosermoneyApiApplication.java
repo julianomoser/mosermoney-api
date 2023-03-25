@@ -20,7 +20,7 @@ public class MosermoneyApiApplication {
         TimeZone.setDefault(TimeZone.getTimeZone("GMT-3"));
     }
 
-    @Bean(name="messageSource")
+    @Bean(name = "messageSource")
     public ResourceBundleMessageSource bundleMessageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
         messageSource.setBasename("messages");

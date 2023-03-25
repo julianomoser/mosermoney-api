@@ -42,8 +42,17 @@ public class Pessoa {
     public void ativar() {
         setAtivo(true);
     }
+
     public void inativar() {
         setAtivo(false);
+    }
+
+    public boolean isInativo() {
+        return !isAtivo();
+    }
+
+    public boolean isAtivo() {
+        return this.ativo;
     }
 
     @Override

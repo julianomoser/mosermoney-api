@@ -1,11 +1,11 @@
 package br.com.moser.mosermoney.controller;
 
 import br.com.moser.mosermoney.event.RecursoCriadoEvent;
+import br.com.moser.mosermoney.repository.filter.LancamentoFilter;
 import br.com.moser.mosermoney.model.Lancamento;
 import br.com.moser.mosermoney.service.LancamentoService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +29,8 @@ public class LancamentoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Lancamento>> listAll() {
-        final List<Lancamento> lancamentosList = service.listAll();
+    public ResponseEntity<List<Lancamento>> pesquisar(LancamentoFilter lancamentoFilter) {
+        final List<Lancamento> lancamentosList = service.pesquisar(lancamentoFilter);
         return ResponseEntity.ok(lancamentosList);
     }
 

@@ -1,6 +1,7 @@
 package br.com.moser.mosermoney.exceptionhandler;
 
 import br.com.moser.mosermoney.exception.EntidadeNaoEncontradaException;
+import br.com.moser.mosermoney.exception.PessoaInativaException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fasterxml.jackson.databind.exc.PropertyBindingException;
@@ -26,8 +27,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static br.com.moser.mosermoney.exceptionhandler.ProblemType.MENSAGEM_INCOMPREENSIVEL;
-import static br.com.moser.mosermoney.exceptionhandler.ProblemType.RECURSO_NAO_ENCONTRADO;
+import static br.com.moser.mosermoney.exceptionhandler.ProblemType.*;
 
 /**
  * @author Juliano Moser
@@ -135,6 +135,19 @@ public class MosermoneyExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = ex.getMessage();
 
         Problem problem = createProblemBuilder(status, RECURSO_NAO_ENCONTRADO, detail)
+                .userMessage(detail)
+                .build();
+
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(PessoaInativaException.class)
+    public ResponseEntity<?> handlePessoaInativa(PessoaInativaException ex,
+                                                         WebRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String detail = ex.getMessage();
+
+        Problem problem = createProblemBuilder(status, ENTIDADE_INATIVA, detail)
                 .userMessage(detail)
                 .build();
 
