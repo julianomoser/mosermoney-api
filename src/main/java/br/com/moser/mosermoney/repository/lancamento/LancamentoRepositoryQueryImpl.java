@@ -3,6 +3,7 @@ package br.com.moser.mosermoney.repository.lancamento;
 import br.com.moser.mosermoney.model.Lancamento;
 import br.com.moser.mosermoney.model.Lancamento_;
 import br.com.moser.mosermoney.repository.filter.LancamentoFilter;
+import org.springframework.data.domain.Pageable;
 import org.springframework.util.ObjectUtils;
 
 import javax.persistence.EntityManager;
@@ -10,7 +11,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 

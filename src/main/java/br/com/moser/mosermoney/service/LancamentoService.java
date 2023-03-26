@@ -3,26 +3,17 @@ package br.com.moser.mosermoney.service;
 import br.com.moser.mosermoney.exception.EntidadeEmUsoException;
 import br.com.moser.mosermoney.exception.LancamentoNaoEncontradoException;
 import br.com.moser.mosermoney.exception.PessoaInativaException;
-import br.com.moser.mosermoney.repository.filter.LancamentoFilter;
 import br.com.moser.mosermoney.model.Categoria;
 import br.com.moser.mosermoney.model.Lancamento;
-import br.com.moser.mosermoney.model.Lancamento_;
 import br.com.moser.mosermoney.model.Pessoa;
 import br.com.moser.mosermoney.repository.LancamentoRepository;
+import br.com.moser.mosermoney.repository.filter.LancamentoFilter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,7 +45,6 @@ public class LancamentoService {
     public List<Lancamento> pesquisar(LancamentoFilter lancamentoFilter) {
         return repository.filtrar(lancamentoFilter);
     }
-
 
     public Optional<Lancamento> findById(Long codigo) {
         return repository.findById(codigo);

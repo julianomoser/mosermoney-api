@@ -1,17 +1,21 @@
 package br.com.moser.mosermoney.controller;
 
 import br.com.moser.mosermoney.event.RecursoCriadoEvent;
-import br.com.moser.mosermoney.repository.filter.LancamentoFilter;
 import br.com.moser.mosermoney.model.Lancamento;
+import br.com.moser.mosermoney.repository.LancamentoRepository;
+import br.com.moser.mosermoney.repository.filter.LancamentoFilter;
+import br.com.moser.mosermoney.repository.spec.LancamentoSpecs;
 import br.com.moser.mosermoney.service.LancamentoService;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * @author Juliano Moser
@@ -22,16 +26,18 @@ public class LancamentoController {
 
     private final LancamentoService service;
     private final ApplicationEventPublisher publisher;
+    private final LancamentoRepository repository;
 
-    public LancamentoController(LancamentoService service, ApplicationEventPublisher publisher) {
+    public LancamentoController(LancamentoService service, ApplicationEventPublisher publisher, LancamentoRepository repository) {
         this.service = service;
         this.publisher = publisher;
+        this.repository = repository;
     }
 
     @GetMapping
-    public ResponseEntity<List<Lancamento>> pesquisar(LancamentoFilter lancamentoFilter) {
-        final List<Lancamento> lancamentosList = service.pesquisar(lancamentoFilter);
-        return ResponseEntity.ok(lancamentosList);
+    public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter,
+                                      @PageableDefault(size = 10) Pageable pageable) {
+        return repository.findAll(LancamentoSpecs.usingFilter(lancamentoFilter), pageable);
     }
 
     @GetMapping("/{codigo}")
