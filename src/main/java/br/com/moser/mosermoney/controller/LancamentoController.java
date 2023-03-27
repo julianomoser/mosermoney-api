@@ -5,6 +5,7 @@ import br.com.moser.mosermoney.model.Lancamento;
 import br.com.moser.mosermoney.repository.LancamentoRepository;
 import br.com.moser.mosermoney.repository.filter.LancamentoFilter;
 import br.com.moser.mosermoney.repository.spec.LancamentoSpecs;
+import br.com.moser.mosermoney.security.CheckSecurity;
 import br.com.moser.mosermoney.service.LancamentoService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -34,12 +35,14 @@ public class LancamentoController {
         this.repository = repository;
     }
 
+    @CheckSecurity.Lancamento.PodeConsultar
     @GetMapping
     public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter,
                                       @PageableDefault(size = 10) Pageable pageable) {
         return repository.findAll(LancamentoSpecs.usingFilter(lancamentoFilter), pageable);
     }
 
+    @CheckSecurity.Lancamento.PodeConsultar
     @GetMapping("/{codigo}")
     public ResponseEntity<Lancamento> buscarPeloCodigo(@PathVariable Long codigo) {
         return this.service.findById(codigo)
@@ -47,6 +50,7 @@ public class LancamentoController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @CheckSecurity.Lancamento.PodeEditar
     @PostMapping
     public ResponseEntity<Lancamento> save(@Valid @RequestBody Lancamento Lancamento, HttpServletResponse response) {
         final Lancamento LancamentoSalva = service.save(Lancamento);
@@ -54,6 +58,7 @@ public class LancamentoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(LancamentoSalva);
     }
 
+    @CheckSecurity.Lancamento.PodeEditar
     @PutMapping(path = "/{codigo}")
     public ResponseEntity<Lancamento> atualizar(@PathVariable Long codigo,
                                                 @RequestBody @Valid Lancamento Lancamento) {
@@ -61,6 +66,7 @@ public class LancamentoController {
         return ResponseEntity.ok().body(Lancamento);
     }
 
+    @CheckSecurity.Lancamento.PodeRemover
     @DeleteMapping("/{codigo}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long codigo) {

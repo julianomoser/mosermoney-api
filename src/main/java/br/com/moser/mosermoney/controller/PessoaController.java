@@ -2,6 +2,7 @@ package br.com.moser.mosermoney.controller;
 
 import br.com.moser.mosermoney.event.RecursoCriadoEvent;
 import br.com.moser.mosermoney.model.Pessoa;
+import br.com.moser.mosermoney.security.CheckSecurity;
 import br.com.moser.mosermoney.service.PessoaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
@@ -28,6 +29,7 @@ public class PessoaController {
         this.publisher = publisher;
     }
 
+    @CheckSecurity.Pessoa.PodeEditar
     @PostMapping
     public ResponseEntity<Pessoa> save(@Valid @RequestBody Pessoa pessoa, HttpServletResponse response) {
         final Pessoa pessoaSalva = service.save(pessoa);
@@ -35,6 +37,7 @@ public class PessoaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(pessoaSalva);
     }
 
+    @CheckSecurity.Pessoa.PodeConsultar
     @GetMapping("/{codigo}")
     public ResponseEntity<Pessoa> buscarPeloCodigo(@PathVariable Long codigo) {
         return this.service.findById(codigo)
@@ -42,6 +45,7 @@ public class PessoaController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @CheckSecurity.Pessoa.PodeEditar
     @PutMapping(path = "/{codigo}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Pessoa> atualizar(@PathVariable Long codigo,
                                             @RequestBody @Valid Pessoa pessoa) {
@@ -49,6 +53,7 @@ public class PessoaController {
         return ResponseEntity.ok().body(pessoa);
     }
 
+    @CheckSecurity.Pessoa.PodeEditar
     @PutMapping("/{codigo}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> ativar(@PathVariable Long codigo) {
@@ -56,6 +61,7 @@ public class PessoaController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Pessoa.PodeEditar
     @DeleteMapping("/{codigo}/ativo")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> inativar(@PathVariable Long codigo) {
@@ -63,6 +69,7 @@ public class PessoaController {
         return ResponseEntity.noContent().build();
     }
 
+    @CheckSecurity.Pessoa.PodeRemover
     @DeleteMapping("/{codigo}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long codigo) {
