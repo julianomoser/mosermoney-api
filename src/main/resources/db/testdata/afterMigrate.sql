@@ -1,16 +1,22 @@
 set foreign_key_checks = 0;
 
-lock tables categoria write, pessoa write, lancamento write;
+lock tables categoria write, pessoa write, lancamento write, usuario write, permissao write, usuario_permissao write;
 
 delete from categoria;
 delete from pessoa;
 delete from lancamento;
+delete from usuario;
+delete from permissao;
+delete from usuario_permissao;
 
 set foreign_key_checks = 1;
 
 alter table categoria auto_increment = 1;
 alter table pessoa auto_increment = 1;
 alter table lancamento auto_increment = 1;
+alter table usuario auto_increment = 1;
+alter table permissao auto_increment = 1;
+alter table usuario_permissao auto_increment = 1;
 
 INSERT INTO categoria (nome) values ('Lazer');
 INSERT INTO categoria (nome) values ('Alimentação');
@@ -45,5 +51,33 @@ INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, obser
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Café', '2017-04-10', '2017-04-10', 4.32, null, 'DESPESA', 4, 2);
 INSERT INTO lancamento (descricao, data_vencimento, data_pagamento, valor, observacao, tipo, codigo_categoria, codigo_pessoa) values ('Lanche', '2017-06-10', null, 10.20, null, 'DESPESA', 4, 1);
 
+INSERT INTO usuario (codigo, nome, email, senha, data_cadastro) values (1, 'Administrador', 'admin@mosermoney.com', '$2a$10$DarjuXo25v0jYwVLGYCoQOW2sZyCXHablbMbNpp/14DFfvF6WS1by', utc_timestamp);
+INSERT INTO usuario (codigo, nome, email, senha, data_cadastro) values (2, 'Plini', 'plini@mosermoney.com', '$2a$10$eMbgfGAsh4N48roX79h85.994XouK7fOu.YnD9XfUNsJbMMRSImyy', utc_timestamp);
+
+INSERT INTO permissao (codigo, descricao) values (1, 'ROLE_CADASTRAR_CATEGORIA');
+INSERT INTO permissao (codigo, descricao) values (2, 'ROLE_PESQUISAR_CATEGORIA');
+
+INSERT INTO permissao (codigo, descricao) values (3, 'ROLE_CADASTRAR_PESSOA');
+INSERT INTO permissao (codigo, descricao) values (4, 'ROLE_REMOVER_PESSOA');
+INSERT INTO permissao (codigo, descricao) values (5, 'ROLE_PESQUISAR_PESSOA');
+
+INSERT INTO permissao (codigo, descricao) values (6, 'ROLE_CADASTRAR_LANCAMENTO');
+INSERT INTO permissao (codigo, descricao) values (7, 'ROLE_REMOVER_LANCAMENTO');
+INSERT INTO permissao (codigo, descricao) values (8, 'ROLE_PESQUISAR_LANCAMENTO');
+
+-- admin
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 1);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 2);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 3);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 4);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 5);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 6);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 7);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (1, 8);
+
+-- plini
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 2);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 5);
+INSERT INTO usuario_permissao (codigo_usuario, codigo_permissao) values (2, 8);
 
 unlock tables;
