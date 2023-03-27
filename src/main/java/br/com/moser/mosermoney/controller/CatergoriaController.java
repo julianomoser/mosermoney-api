@@ -2,6 +2,7 @@ package br.com.moser.mosermoney.controller;
 
 import br.com.moser.mosermoney.event.RecursoCriadoEvent;
 import br.com.moser.mosermoney.model.Categoria;
+import br.com.moser.mosermoney.security.CheckSecurity;
 import br.com.moser.mosermoney.service.CategoriaService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
@@ -27,12 +28,14 @@ public class CatergoriaController {
         this.publisher = publisher;
     }
 
+    @CheckSecurity.Categoria.PodeConsultar
     @GetMapping
     public ResponseEntity<List<Categoria>> listAll() {
         final List<Categoria> categoriaList = service.listAll();
         return ResponseEntity.ok(categoriaList);
     }
 
+    @CheckSecurity.Categoria.PodeEditar
     @PostMapping
     public ResponseEntity<Categoria> save(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
         final Categoria categoriaSalva = service.save(categoria);
@@ -40,6 +43,7 @@ public class CatergoriaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoriaSalva);
     }
 
+    @CheckSecurity.Categoria.PodeConsultar
     @GetMapping("/{codigo}")
     public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
         return this.service.findById(codigo)
