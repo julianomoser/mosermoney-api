@@ -1,5 +1,7 @@
 package br.com.moser.mosermoney.controller;
 
+import br.com.moser.mosermoney.property.MoserMoneySecurityProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +19,14 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(path = "/token")
 public class TokenController {
 
+    @Autowired
+    private MoserMoneySecurityProperties securityProperties;
+
     @DeleteMapping("/revoke")
     public void revoke(HttpServletRequest request, HttpServletResponse response) {
         Cookie cookie = new Cookie("refresh_token", null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(false); // TODO: em produção será true
+        cookie.setSecure(securityProperties.getSecurity().isEnableHttps());
         cookie.setPath(request.getContextPath() + "/oauth/token");
         cookie.setMaxAge(0);
 
