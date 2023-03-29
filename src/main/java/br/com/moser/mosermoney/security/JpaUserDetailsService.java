@@ -33,7 +33,7 @@ public class JpaUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(email);
         Usuario usuario = usuarioOptional.orElseThrow(() -> new UsernameNotFoundException("Usuário e/ou senha incorretos"));
-        return new User(email, usuario.getSenha(), getAuthorities(usuario));
+        return new UsuarioSistema(usuario, getAuthorities(usuario));
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(Usuario usuario) {
