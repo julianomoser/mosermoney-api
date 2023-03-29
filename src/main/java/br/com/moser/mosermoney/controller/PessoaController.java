@@ -6,6 +6,8 @@ import br.com.moser.mosermoney.security.CheckSecurity;
 import br.com.moser.mosermoney.service.PessoaService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,12 @@ public class PessoaController {
     public PessoaController(PessoaService service, ApplicationEventPublisher publisher) {
         this.service = service;
         this.publisher = publisher;
+    }
+
+    @CheckSecurity.Pessoa.PodeConsultar
+    @GetMapping
+    public Page<Pessoa> pesquisar(@RequestParam(required = false, defaultValue = "") String nome, Pageable pageable) {
+        return service.findByNomeContaining(nome, pageable);
     }
 
     @CheckSecurity.Pessoa.PodeEditar
