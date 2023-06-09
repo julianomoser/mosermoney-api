@@ -1,5 +1,6 @@
 package br.com.moser.mosermoney.exceptionhandler;
 
+import br.com.moser.mosermoney.exception.EntidadeEmUsoException;
 import br.com.moser.mosermoney.exception.EntidadeNaoEncontradaException;
 import br.com.moser.mosermoney.exception.PessoaInativaException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -163,6 +164,20 @@ public class MosermoneyExceptionHandler extends ResponseEntityExceptionHandler {
         String detail = ex.getMessage();
 
         Problem problem = createProblemBuilder(status, ENTIDADE_INATIVA, detail)
+                .userMessage(detail)
+                .build();
+
+        return handleExceptionInternal(ex, problem, new HttpHeaders(), status, request);
+    }
+
+    @ExceptionHandler(EntidadeEmUsoException.class)
+    public ResponseEntity<?> handleEntidadeEmUso(EntidadeEmUsoException ex, WebRequest request) {
+
+        HttpStatus status = HttpStatus.CONFLICT;
+        ProblemType problemType = ProblemType.ENTIDADE_EM_USO;
+        String detail = ex.getMessage();
+
+        Problem problem = createProblemBuilder(status, problemType, detail)
                 .userMessage(detail)
                 .build();
 

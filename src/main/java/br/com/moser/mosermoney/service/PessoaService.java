@@ -21,7 +21,7 @@ import java.util.Optional;
 @Service
 public class PessoaService {
 
-    private static final String MSG_PESSOA_EM_USO = "Pessoa de código %d não pode ser removida, pois está em uso ";
+    private static final String MSG_PESSOA_EM_USO = "Pessoa de código %d não pode ser removida, pois está em uso.";
 
     private final PessoaRepository repository;
 
